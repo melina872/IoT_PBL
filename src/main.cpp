@@ -27,8 +27,8 @@
 
 
 //--- MFRC255 Pins --- Based on [*ref*], Lab 9 handout, base code
-#define RFID_SDA 16
-#define RFID_RST 17
+#define RFID_SDA 5
+#define RFID_RST 22
 
 MFRC522 rfid(RFID_SDA, RFID_RST); // instance of MFRC522
 
