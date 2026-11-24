@@ -109,7 +109,7 @@ void allIndicatorsOff()
 
 void onAccessGranted() 
 { 
-  Serial.println("ACCESS GRANTED"); 
+  Serial.println("OCCUPIED"); 
   allIndicatorsOff(); 
   digitalWrite(Green_LED, HIGH); 
   startIndicatorTimer(2000); 
@@ -162,7 +162,7 @@ void setup(){
     rfid.PCD_Init();
     delay(10);
     rfid.PCD_DumpVersionToSerial();
-    Serial.println("Tap a card...");
+    Serial.println("Available");
 
     //LED code
     pinMode(Green_LED, OUTPUT); 
