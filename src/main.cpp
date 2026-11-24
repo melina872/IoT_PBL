@@ -32,10 +32,10 @@
 
 
 //--- BME280 Pins ---
-
+#define BME280_SDA 21
 
 //--- SD Card Reader Pins ---
-
+#define SD_CS 2
 
 //-- Global Variables --
 //--- Common ---
