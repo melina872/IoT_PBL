@@ -57,6 +57,12 @@ int numAuthorized = 1;
 
 //--- BME280 ---
 //--- SD Card Reader ---
+//--- Web Page ---
+//---- WiFi Information ----
+const char* ssid = "Library_Wifi"; // WiFi SSID based on [*ref*], Lab 7 handout, Part
+const char* password = "Password123"; // WiFi password based on [*ref*], Lab 7 handout, Part
+
+//---- Wi-Fi constants ----
 
 //-- Functions --
 
