@@ -67,6 +67,30 @@ WebServer server(80); // Create a web server object that listens for HTTP reques
 
 //---- Web Page HTML Code ----
 const char webpage [] PROGMEM = R"rawliteral(
+    <!DOCTYPE html>
+    <!-- This document will be merged with the main.cpp file -->
+
+    <header>
+        <title> Library Web Interface </title>
+    </header>
+
+    <body style="background-color: rgb(207, 238, 240);">
+        <center>
+            <h1 style="color: rgb(19, 4, 65); font-family:Verdana, Geneva, Tahoma, sans-serif;"> Staff Data Page </h1>
+        </center>
+        <p class="value">
+            ROOM_STATUS
+        </p>
+        <p class="value">
+            ROOM_TEMP
+        </p>
+        <p class="value">
+            FAN_LEVEL
+        </p>
+        <p class="value">
+            STATUS_BYTE
+        </p>
+    </body>
 )rawliteral";
 
 //-- Functions --
