@@ -24,7 +24,9 @@
 #define Pot_PIN 34 //Potentiometer wiper 
 
 //--- OLED Pins---
-
+#define OLED_CS 15
+#define OLED_DC 16
+#define OLED_RST 17
 
 //--- MFRC255 Pins ---
 
