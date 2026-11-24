@@ -162,7 +162,7 @@ void setup(){
     rfid.PCD_Init();
     delay(10);
     rfid.PCD_DumpVersionToSerial();
-    Serial.println("Available");
+    Serial.println("AVAILABLE");
 
     //LED code
     pinMode(Green_LED, OUTPUT); 
