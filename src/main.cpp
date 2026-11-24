@@ -62,7 +62,12 @@ int numAuthorized = 1;
 const char* ssid = "Library_Wifi"; // WiFi SSID based on [*ref*], Lab 7 handout, Part
 const char* password = "Password123"; // WiFi password based on [*ref*], Lab 7 handout, Part
 
-//---- Wi-Fi constants ----
+//---- Web Server Variable ----
+WebServer server(80); // Create a web server object that listens for HTTP request on port 80
+
+//---- Web Page HTML Code ----
+const char webpage [] PROGMEM = R"rawliteral(
+)rawliteral";
 
 //-- Functions --
 
