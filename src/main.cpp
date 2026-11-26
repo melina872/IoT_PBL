@@ -32,8 +32,11 @@
 #define OLED_DC 16
 #define OLED_RST 17
 
-//--- MFRC255 Pins ---
+//--- MFRC255 Pins --- Based on [*ref*], Lab 9 handout, base code
+#define RFID_SDA 5
+#define RFID_RST 22
 
+MFRC522 rfid(RFID_SDA, RFID_RST); // instance of MFRC522
 
 //--- BME280 Pins ---
 #define BME280_SDA 21
@@ -44,19 +47,148 @@
 //-- Global Variables --
 //--- Common ---
 //--- LED ---
+unsigned long indicatorStart = 0; 
+unsigned long indicatorTime = 0; 
+bool indicatorOn = false; 
+
+String lastUID = ""; 
+unsigned long lastScanTime = 0;
+
 //--- Pushbutton ---
 //--- Potentiometer ---
 //--- OLED ---
 //--- MFRC255 ---
+String authorizedUIDs[] = {"53 56 29 56"}; // UID (white card) authorized 
+int numAuthorized = 1; 
+
 //--- BME280 ---
 //--- SD Card Reader ---
 
 //-- Functions --
 
+// getsUID() turns the card's UID into text
+String getUID()
+{
+    String uid = "";
+    for (byte i = 0; i < rfid.uid.size; i++)
+    {
+        if (rfid.uid.uidByte[i] < 0x10)
+        {
+            uid = uid + "0";
+        }
+        uid = uid + String(rfid.uid.uidByte[i], HEX);
+        if (i < rfid.uid.size - 1)
+        {
+            uid = uid + " ";
+        }
+    }
+    uid.toUpperCase();
+    return uid;
+}
+
+// decides if the card is authorized or not
+bool isAuthorized(String uid) 
+{ 
+  for (int i = 0; i < numAuthorized; i++) 
+  { 
+    if (uid == authorizedUIDs[i]) 
+    { 
+      return true; 
+    } 
+  } 
+  return false; 
+} 
+
+// event handlers for access granted and denied
+void startIndicatorTimer(unsigned long duration) 
+{ 
+  indicatorStart = millis(); 
+  indicatorTime = duration; 
+  indicatorOn = true; 
+} 
+
+void allIndicatorsOff() 
+{ 
+  digitalWrite(Green_LED, LOW); 
+  digitalWrite(Red_LED, LOW); 
+}  
+
+void onAccessGranted() 
+{ 
+  Serial.println("OCCUPIED"); 
+  allIndicatorsOff(); 
+  digitalWrite(Green_LED, HIGH); 
+  startIndicatorTimer(2000); 
+} 
+
+void onAccessDenied() 
+{ 
+  Serial.println("ACCESS DENIED"); 
+  allIndicatorsOff(); 
+  digitalWrite(Red_LED, HIGH);  
+  startIndicatorTimer(1000); 
+} 
+
+void onTimerExpired() 
+{ 
+  allIndicatorsOff(); 
+  indicatorOn = false; 
+  Serial.println("Ready"); 
+} 
+
+void onCardScanned(String uid) 
+{ 
+  if (uid == lastUID && millis() - lastScanTime < 2000) 
+  { 
+    Serial.println("Repeat ignored"); 
+    return; 
+  } 
+  lastUID = uid; 
+  lastScanTime = millis(); 
+
+  Serial.print("Card UID: "); 
+  Serial.println(uid); 
+
+  if (isAuthorized(uid) == true) 
+  { 
+    onAccessGranted(); 
+  } 
+  else 
+  { 
+    onAccessDenied(); 
+  } 
+} 
+
 void setup(){
 
+    Serial.begin(115200);
+
+    //RFID code
+    SPI.begin();
+    rfid.PCD_Init();
+    delay(10);
+    rfid.PCD_DumpVersionToSerial();
+    Serial.println("AVAILABLE");
+
+    //LED code
+    pinMode(Green_LED, OUTPUT); 
+    pinMode(Red_LED, OUTPUT);
 }
 
 void loop(){
 
+    //Card Dectection
+    if (rfid.PICC_IsNewCardPresent() == true && rfid.PICC_ReadCardSerial() == true) 
+    { 
+    String uid = getUID(); 
+    onCardScanned(uid); 
+    rfid.PICC_HaltA(); 
+    rfid.PCD_StopCrypto1(); 
+    } 
+
+    // Indicator Timer
+    if (indicatorOn == true && millis() - indicatorStart >= indicatorTime) 
+    { 
+    onTimerExpired(); 
+    } 
 }
