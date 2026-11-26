@@ -70,9 +70,6 @@ void IRAM_ATTR button_ISR(){
     }
 }
 
-void HelpButton(){
-
-}
 
 void setup(){
   //Button set-up
@@ -83,5 +80,11 @@ void setup(){
 }
 
 void loop(){
+  //Interupt (Based on [], Lab 10 handout, Part IV)
+  //Verifies if the flag has been raised
+  if (buttonFlag == true) {
+    buttonFlag = false; //Puts down the flag
+    onButtonPressed(); //calls the handler
+  }
 
 }
