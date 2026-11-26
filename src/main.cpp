@@ -63,7 +63,8 @@ int numAuthorized = 1;
 
 //--- SD Card Reader ---
 
-//--- BMP280 ---
+//--- BMP280 --- Based on [], Lab 6 handout, Part 
+Adafruit_BMP280 bmp;
 float temperature;
 
 //--- Fan Control --- 
@@ -207,18 +208,21 @@ void setup(){
 
 void loop(){
 
-    //Card Dectection
-    if (rfid.PICC_IsNewCardPresent() == true && rfid.PICC_ReadCardSerial() == true) 
-    { 
-    String uid = getUID(); 
-    onCardScanned(uid); 
-    rfid.PICC_HaltA(); 
-    rfid.PCD_StopCrypto1(); 
-    } 
+  //Card Dectection
+  if (rfid.PICC_IsNewCardPresent() == true && rfid.PICC_ReadCardSerial() == true) 
+  { 
+  String uid = getUID(); 
+  onCardScanned(uid); 
+  rfid.PICC_HaltA(); 
+  rfid.PCD_StopCrypto1(); 
+  } 
 
-    // Indicator Timer
-    if (indicatorOn == true && millis() - indicatorStart >= indicatorTime) 
-    { 
+  // Indicator Timer
+  if (indicatorOn == true && millis() - indicatorStart >= indicatorTime) 
+  { 
     onTimerExpired(); 
-    } 
+  } 
+
+  //PWM Fan control
+  fanControl(); //calls the fan control function
 }
