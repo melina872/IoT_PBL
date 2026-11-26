@@ -75,7 +75,11 @@ void HelpButton(){
 }
 
 void setup(){
+  //Button set-up
+  pinMode(Button_PIN, INPUT_PULLUP);
 
+  //Interrupt set-up (Based on [], Lab 10 handout, Part IV)
+  attachInterrupt(digitalPinToInterrupt(Button_PIN), button_ISR, FALLING); //Set the mode to look at the falling edge
 }
 
 void loop(){
