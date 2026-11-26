@@ -186,7 +186,14 @@ void onCardScanned(String uid)
   { 
     onAccessDenied(); 
   } 
-} 
+}
+
+//--- Web Page Functions ---
+void handleRoot(){
+    String page = webpage;
+    page.replace("ROOM_STATUS", );
+
+}
 
 void setup(){
 
