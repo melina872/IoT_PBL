@@ -46,7 +46,7 @@ MFRC522 rfid(RFID_SDA, RFID_RST); // instance of MFRC522
 
 //-- Global Variables --
 //--- Common ---
-//--- LED ---
+//--- LED --- Based on [*ref*], Lab 9 handout, base code
 unsigned long indicatorStart = 0; 
 unsigned long indicatorTime = 0; 
 bool indicatorOn = false; 
@@ -61,12 +61,15 @@ unsigned long lastScanTime = 0;
 String authorizedUIDs[] = {"53 56 29 56"}; // UID (white card) authorized 
 int numAuthorized = 1; 
 
-//--- BME280 ---
+//--- BME280 --- Based on [*ref*], Lab 7 handout, base code
+Adafruit_BMP280 bmp;
+float temperature;
+
 //--- SD Card Reader ---
 
 //-- Functions --
 
-// getsUID() turns the card's UID into text
+// getsUID() turns the card's UID into text | Based on [*ref*], Lab 9 handout, base code
 String getUID()
 {
     String uid = "";
@@ -86,7 +89,7 @@ String getUID()
     return uid;
 }
 
-// decides if the card is authorized or not
+// decides if the card is authorized or not | Based on [*ref*], Lab 9 handout, base code
 bool isAuthorized(String uid) 
 { 
   for (int i = 0; i < numAuthorized; i++) 
@@ -99,7 +102,7 @@ bool isAuthorized(String uid)
   return false; 
 } 
 
-// event handlers for access granted and denied
+// event handlers for access granted and denied | Based on [*ref*], Lab 9 handout, base code
 void startIndicatorTimer(unsigned long duration) 
 { 
   indicatorStart = millis(); 
@@ -163,7 +166,7 @@ void setup(){
 
     Serial.begin(115200);
 
-    //RFID code
+    //RFID code | Based on [*ref*], Lab 9 handout, base code
     SPI.begin();
     rfid.PCD_Init();
     delay(10);
@@ -173,11 +176,28 @@ void setup(){
     //LED code
     pinMode(Green_LED, OUTPUT); 
     pinMode(Red_LED, OUTPUT);
+
+    //BMP280 code (initialization) | Based on [*ref*], Lab 7 handout, base code
+    Wire.begin();
+ 
+    if (bmp.begin(0x76))
+    {
+     Serial.println("BMP280 Found at 0x76");
+    }
+      else if (bmp.begin(0x77))
+    {
+      Serial.println("BMP280 Found at 0x77");
+    }
+    else
+    {
+      Serial.println("BMP280 Not Found");
+    }
+
 }
 
 void loop(){
 
-    //Card Dectection
+    //Card Dectection | Based on [*ref*], Lab 9 handout, base code
     if (rfid.PICC_IsNewCardPresent() == true && rfid.PICC_ReadCardSerial() == true) 
     { 
     String uid = getUID(); 
@@ -186,9 +206,19 @@ void loop(){
     rfid.PCD_StopCrypto1(); 
     } 
 
-    // Indicator Timer
+    // Indicator Timer | Based on [*ref*], Lab 9 handout, base code
     if (indicatorOn == true && millis() - indicatorStart >= indicatorTime) 
     { 
     onTimerExpired(); 
-    } 
+    }
+    
+    //read temp lab 6
+    temperature = bmp.readTemperature();
+    
+    Serial.print("Temperature: ");
+    Serial.print(temperature);
+    Serial.println(" C");
+    
+    delay(1000);
+
 }
