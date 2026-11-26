@@ -41,6 +41,12 @@
 //--- Common ---
 //--- LED ---
 //--- Pushbutton ---
+//---- Interupt ----
+// All variables based on [], Lab 10 handout, Part IV
+volatile bool buttonFlag = false; //When button pressed, the flag is raised
+volatile unsigned long lastInterrupt = 0; //last accepted press
+int pressCountButton = 0; //Counts the number of times the button has been pressed
+
 //--- Potentiometer ---
 //--- OLED ---
 //--- MFRC255 ---
@@ -48,6 +54,10 @@
 //--- SD Card Reader ---
 
 //-- Functions --
+//--- Help Button ---
+void HelpButton(){
+
+}
 
 void setup(){
 
