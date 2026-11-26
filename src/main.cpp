@@ -39,7 +39,8 @@
 MFRC522 rfid(RFID_SDA, RFID_RST); // instance of MFRC522
 
 //--- BME280 Pins ---
-#define BME280_SDA 21
+#define BMP280_SDA 21
+#define BMP280_CLK 14
 
 //--- SD Card Reader Pins ---
 #define SD_CS 2
