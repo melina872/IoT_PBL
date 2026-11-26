@@ -13,6 +13,10 @@
 
 //-- Pin Definitions --
 //--- Common Pins ---
+#define MOSI_PIN 23
+#define MISO_PIN 19
+#define CLK_PIN 18
+
 //--- LED Pins---
 #define Green_LED 25
 #define Red_LED 26
