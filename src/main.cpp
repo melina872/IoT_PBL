@@ -55,6 +55,21 @@ int pressCountButton = 0; //Counts the number of times the button has been press
 
 //-- Functions --
 //--- Help Button ---
+//---- Count ---- (Based on [], Lab 10 handout, Part IV)
+void onButtonPressed(){
+    pressCountButton++; //increases the press count
+    Serial.print("Button Pressed. Count ="); //Displays on the serial monitor the amount of times it counts
+    Serial.print(pressCountButton);
+}
+
+//---- ISR ---- (Based on [], Lab 10 handout, Part IV)
+void IRAM_ATTR button_ISR(){
+    if (millis() - lastInterrupt > 200){
+        lastInterrupt = millis(); //Remembers the last time the button was pressed
+        buttonFlag = true; //raises the flag for loop()
+    }
+}
+
 void HelpButton(){
 
 }
