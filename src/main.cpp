@@ -39,7 +39,7 @@
 MFRC522 rfid(RFID_SDA, RFID_RST); // instance of MFRC522
 
 //--- BME280 Pins ---
-#define BME280_SDA 21
+#define BMP280_SDA 21
 
 //--- SD Card Reader Pins ---
 #define SD_CS 2
@@ -61,11 +61,19 @@ unsigned long lastScanTime = 0;
 String authorizedUIDs[] = {"53 56 29 56"}; // UID (white card) authorized 
 int numAuthorized = 1; 
 
-//--- BME280 ---
 //--- SD Card Reader ---
 
-//-- Functions --
+//--- BMP280 ---
+float temperature;
 
+//--- Fan Control --- 
+const int PWM_FREQ = 5000; //initializing the PWM frequency
+const int PWM_RES = 8; //Sets the duty cycle from 0-255 (8 bits)
+
+// Based on [], Lab 12 handout, Part VII
+
+//-- Functions --
+//--- RFID Fuctions ---
 // getsUID() turns the card's UID into text
 String getUID()
 {
@@ -159,20 +167,42 @@ void onCardScanned(String uid)
   } 
 } 
 
+//--- Fan Control Functions ---
+void fanControl(){
+  temperature = bmp.readTemperature(); //Based on [], Lab 6 handout, Part 
+  int potValue = analogRead(Pot_PIN); //Reads the value of the potentiometer (Based on [], Lab 12 handout, Part VII)
+  int duty = 0;
+  ledcWrite(Red_LED, duty); //Changes the LED light based on the duty cycle (Based on [], Lab 12 handout, Part VII)
+  //Control the fan
+  //Verifies if the temperature is above the potValue
+  if (temperature > potValue){
+    
+  }
+
+  //If the temperature is above the potValue
+  else{
+
+  }
+  
+}
+
 void setup(){
 
-    Serial.begin(115200);
+  Serial.begin(115200);
 
-    //RFID code
-    SPI.begin();
-    rfid.PCD_Init();
-    delay(10);
-    rfid.PCD_DumpVersionToSerial();
-    Serial.println("AVAILABLE");
+  //RFID code
+  SPI.begin();
+  rfid.PCD_Init();
+  delay(10);
+  rfid.PCD_DumpVersionToSerial();
+  Serial.println("AVAILABLE");
 
-    //LED code
-    pinMode(Green_LED, OUTPUT); 
-    pinMode(Red_LED, OUTPUT);
+  //LED code
+  pinMode(Green_LED, OUTPUT); 
+  pinMode(Red_LED, OUTPUT);
+
+  ledcAttach(Red_LED, PWM_FREQ, PWM_RES); //(Based on [], Lab 12 handout, Part VII)
+
 }
 
 void loop(){
